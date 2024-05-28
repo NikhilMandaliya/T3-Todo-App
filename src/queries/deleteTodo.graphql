@@ -1,0 +1,7 @@
+mutation MutationDeleteTodo($id: Int!) {
+  delete_todos_by_pk(id: $id) {
+    id
+    title
+    is_completed
+  }
+}

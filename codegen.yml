@@ -1,0 +1,39 @@
+overwrite: true
+schema:
+  - http://localhost:8080/v1/graphql:
+      headers:
+        x-hasura-admin-secret: ${NEXT_PUBLIC_HASURA_GRAPHQL_ADMIN_SECRET}
+documents:
+  - ./src/**/*.ts
+  - ./src/**/*.tsx
+  - ./src/queries/*.graphql
+generates:
+  ./src/gql/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-document-nodes
+      - urql-introspection
+    config:
+      withHooks: true
+      withHOC: false
+      withComponent: false
+      avoidOptionals: false
+      preResolveTypes: false
+      scalars:
+        DateTime: Date
+        JSON: Record<string, any>
+    hooks:
+      beforeAll:
+        - require('dotenv').config()
+        - |
+          if (!process.env.HASURA_GRAPHQL_ADMIN_SECRET) {
+            console.error(
+              'Missing HASURA_GRAPHQL_ADMIN_SECRET environment variable.'
+            );
+            process.exit(1);
+          }
+        - |
+          require('dotenv').config({ path: '.env.local' }) # load variables from .env.local
+      afterOneFileWrite:
+        - node -r dotenv/config ./node_modules/.bin/prettier --write src/gql/graphql.ts

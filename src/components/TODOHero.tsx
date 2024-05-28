@@ -1,0 +1,22 @@
+import React from "react";
+
+type TODOHeroProps = {
+  todos_completed: number;
+  total_todos: number;
+};
+
+const TODOHero = ({ todos_completed, total_todos }: TODOHeroProps) => {
+  return (
+    <section className="todohero_section">
+      <div>
+        <p className="text_large">Tasks Done</p>
+        <p className="text_small">Keep it up</p>
+      </div>
+      <div>
+        {todos_completed}/{total_todos}
+      </div>
+    </section>
+  );
+};
+
+export default TODOHero;

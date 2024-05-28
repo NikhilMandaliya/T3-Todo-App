@@ -1,0 +1,7 @@
+query TodosQuery {
+  todos(order_by: { id: asc }) {
+    id
+    title
+    is_completed
+  }
+}

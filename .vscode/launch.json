@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "args": [
+                "run",
+                "build"
+            ],
+            "cwd": "${workspaceFolder}",
+        },
+        {
+            "name": "Dev",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "args": [
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}",
+        }
+    ]
+}

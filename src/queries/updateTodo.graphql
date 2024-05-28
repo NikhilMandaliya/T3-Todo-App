@@ -1,0 +1,7 @@
+mutation UpdateTodo($id: Int!, $updates: todos_set_input!) {
+  update_todos_by_pk(pk_columns: { id: $id }, _set: $updates) {
+    id
+    title
+    is_completed
+  }
+}

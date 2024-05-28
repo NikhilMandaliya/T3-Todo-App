@@ -1,0 +1,7 @@
+mutation MutationAddTodo($title: String!) {
+  insert_todos_one(object: { title: $title }) {
+    id
+    is_completed
+    title
+  }
+}
