@@ -25,12 +25,7 @@ const Form = ({ reexecuteQuery }: { reexecuteQuery: UseQueryExecute }) => {
   };
 
   return (
-    <form
-      className="form"
-      onSubmit={(event) => {
-        void handleSubmit(event);
-      }}
-    >
+    <form className="form" onSubmit={(event) => void handleSubmit(event)}>
       <label htmlFor="todo">
         <input type="text" name="todo" id="todo" placeholder="Write your next task" />
       </label>

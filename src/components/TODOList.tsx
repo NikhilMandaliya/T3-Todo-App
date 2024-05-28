@@ -38,14 +38,16 @@ const Item = ({ item }: ItemProps) => {
   const [_, executeUpdateMutation] = useMutation<Todos, UpdateTodoArgs>(MutationUpdateTodo as string);
   const [__, executeDeleteMutation] = useMutation<Todos, Mutation_RootDelete_Todos_By_PkArgs>(MutationDeleteTodo as string);
 
-  const updateTodo = (id: number, updates: Partial<Todo>) => {
-    executeUpdateMutation({ id, updates }).catch((error) => {
+  const updateTodo = async (id: number, updates: Partial<Todo>) => {
+    try {
+      await executeUpdateMutation({ id, updates });
+    } catch (error) {
       console.error(error);
-    });
+    }
   };
 
-  const completeTodo = () => {
-    updateTodo(item.id, { is_completed: !item.is_completed });
+  const completeTodo = async () => {
+    await updateTodo(item.id, { is_completed: !item.is_completed });
   };
 
   const handleEdit = () => {
@@ -61,44 +63,46 @@ const Item = ({ item }: ItemProps) => {
     }
   }, [editing]);
 
-  const handleInputSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleInputSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const form = event.currentTarget;
     const input = form.elements.namedItem("edit-todo") as HTMLInputElement;
     const value = input.value;
 
-    updateTodo(item.id, { title: value });
+    await updateTodo(item.id, { title: value });
 
     setEditing(false);
   };
 
-  const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleInputBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    updateTodo(item.id, { title: value });
+    await updateTodo(item.id, { title: value });
     setEditing(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const shouldDelete = window.confirm("Are you sure you want to delete this task?");
     if (shouldDelete) {
-      executeDeleteMutation({ id: item.id }).catch((error) => {
+      try {
+        await executeDeleteMutation({ id: item.id });
+      } catch (error) {
         console.error(error);
-      });
+      }
     }
   };
 
   return (
     <li id={String(item?.id)} className="todo_item">
       {editing ? (
-        <form className="edit-form" onSubmit={handleInputSubmit}>
+        <form className="edit-form" onSubmit={(e) => void handleInputSubmit(e)}>
           <label htmlFor="edit-todo">
-            <input ref={inputRef} type="text" name="edit-todo" id="edit-todo" defaultValue={item?.title} onBlur={handleInputBlur} />
+            <input ref={inputRef} type="text" name="edit-todo" id="edit-todo" defaultValue={item?.title} onBlur={(e) => void handleInputBlur(e)} />
           </label>
         </form>
       ) : (
         <>
-          <button className="todo_items_left" onClick={completeTodo}>
+          <button className="todo_items_left" onClick={() => void completeTodo()}>
             <svg
               clipRule="evenodd"
               fillRule="evenodd"
@@ -134,7 +138,7 @@ const Item = ({ item }: ItemProps) => {
                 />
               </svg>
             </button>
-            <button onClick={handleDelete}>
+            <button onClick={() => void handleDelete()}>
               <span className="visually-hidden">Delete</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
